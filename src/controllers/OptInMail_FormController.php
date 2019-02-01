@@ -1,6 +1,6 @@
 <?php
 
-namespace Craft;
+namespace misterbk\optInMail;
 
 class OptInMail_FormController extends BaseController {
 

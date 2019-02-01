@@ -1,5 +1,5 @@
 <?php
-namespace Craft;
+namespace misterbk\optInMail;
 
 class OptInMail_FieldRecord extends BaseRecord
 {

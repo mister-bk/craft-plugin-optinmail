@@ -1,5 +1,5 @@
 <?php
-namespace Craft;
+namespace misterbk\optInMail;
 
 class OptInMail_HandleFormService extends BaseApplicationComponent
 {
@@ -36,7 +36,7 @@ class OptInMail_HandleFormService extends BaseApplicationComponent
                 $field->value = trim($value);
                 $field->formHandle = $formHandle;
                 if ($field->validate()) {
-                    assert(in_array($key, craft()->config->get('qualified_fieldnames', 'optinmail')), 'unqualified name found in post: "' . $key . '"');
+                    assert(in_array($key, Craft::$app->config->optinmail->qualified_fieldnames), 'unqualified name found in post: "' . $key . '"');
                     $db_entry = new OptInMail_FieldRecord();
                     $db_entry->setField($field);
                     $db_entry->save();
@@ -116,7 +116,7 @@ class OptInMail_HandleFormService extends BaseApplicationComponent
         $email->toEmail = $submission->recipient;
         $email->subject = $settings->subject_opt_in_mail;
         $link = UrlHelper::getActionUrl('optInMail/form/acceptOptIn', array('optInToken' => $submission->optInToken));
-        $html = craft()->templates->render($settings->opt_in_mail_template_path,
+        $html = craft()->view->render($settings->opt_in_mail_template_path,
             [
             'optInData' => $submission->getValuesArray(),
             'optInLink' => $link
@@ -161,7 +161,7 @@ class OptInMail_HandleFormService extends BaseApplicationComponent
         $email4User = new EmailModel();
         $email4User->toEmail = $submission->recipient;
         $email4User->subject = $settings->subject_success_mail;
-        $html = craft()->templates->render($settings->opt_in_confirmation_mail_template_path,
+        $html = craft()->view->render($settings->opt_in_confirmation_mail_template_path,
             [
             'optInData' => $submission->getValuesArray(),
             ]
@@ -172,7 +172,7 @@ class OptInMail_HandleFormService extends BaseApplicationComponent
 
         $email4Owner = new EmailModel();
         $email4Owner->subject = $settings->subject_success_mail;
-        $html = craft()->templates->render($settings->opt_in_confirmation_mail_template_path,
+        $html = craft()->view->render($settings->opt_in_confirmation_mail_template_path,
             [
             'optInData' => $submission->getValuesArray(),
             ]
