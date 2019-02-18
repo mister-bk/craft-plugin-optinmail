@@ -1,16 +1,16 @@
 <?php
-namespace misterbk\optInMail;
 
-class OptInMail_FieldModel extends BaseModel
+namespace misterbk\optInMail\models;
+
+use craft\base\Model;
+
+class OptInMail_FieldModel extends Model
 {
 
-    protected function defineAttributes()
-    {
-        return array(
-           'id' => AttributeType::Number,
-           'name' => AttributeType::String,
-           'formHandle' => AttributeType::String,
-           'value' => AttributeType::String
-        );
-    }
+    public $id = null;
+    public $name = null;
+    public $formHandle = null;
+    public $value = null;
+    public $uid = null;
+
 }

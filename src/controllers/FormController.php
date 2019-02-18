@@ -1,16 +1,22 @@
 <?php
 
-namespace misterbk\optInMail;
+namespace misterbk\optInMail\controllers;
 
-class OptInMail_FormController extends BaseController {
+use craft\web\Controller as Controller;
+use misterbk\optInMail\models\OptInMail_SubmissionModel;
+use Craft;
+use misterbk\OptInMail\OptInMailPlugin as Plugin;
+
+class FormController extends Controller {
 
     protected $allowAnonymous = true;
+    public $enableCsrfValidation = false;
 
     public function actionSaveFormData()
     {
         $this->requirePostRequest();
 
-        $post = craft()->getRequest()->getPost();
+        $post = \Craft::$app->getRequest()->post();
         if (!$post) {
             throw new Exception('Post was empty');
             return;
@@ -18,7 +24,7 @@ class OptInMail_FormController extends BaseController {
 
         /* Maybe we should make the email input name configurable? Allows more flexibility. */
         if (empty($post['email'])) {
-            throw new Exception('No email field found in post');
+            throw new \Exception('No email field found in post');
             return;
         }
 
@@ -28,19 +34,19 @@ class OptInMail_FormController extends BaseController {
         $submission->recipient = $post['email'];
 
         if (!$submission->validate()) {
-            throw new Exception($submission->getErrors());
+            throw new \Exception($submission->getErrors());
         } else {
-            $error_msg = craft()->optInMail_handleForm->handlePost($submission, $post);
-            $this->returnJson(array('success' => null === $error_msg, 'error_msg' => $error_msg));
+            $error_msg = Plugin::getInstance()->optInFormHandle->handlePost($submission, $post);
+            return $this->asJson(array('success' => null === $error_msg, 'error_msg' => $error_msg));
         }
     }
 
     public function actionAcceptOptIn()
     {
-        $token = craft()->request->getQuery('optInToken');
-        $error_msg = craft()->optInMail_handleForm->verifyToken($token);
+        $token = \Craft::$app->getRequest()->get('optInToken');
+        $error_msg = Plugin::getInstance()->optInFormHandle->verifyToken($token);
 
-        $settings = craft()->plugins->getPlugin('optinmail')->getSettings();
+        $settings = Plugin::getInstance()->getSettings();
 
         return $this->renderTemplate($settings->success_page_template_path,
                 [
@@ -50,3 +56,4 @@ class OptInMail_FormController extends BaseController {
             );
     }
 }
+

@@ -1,15 +1,24 @@
 <?php
-namespace misterbk\optInMail;
 
-class OptInMail_SubmissionFieldModel extends BaseModel
+namespace misterbk\optInMail\models;
+
+use craft\base\Model;
+
+
+class OptInMail_SubmissionFieldModel extends Model
 {
 
-    protected function defineAttributes()
+    public $submission_id = null;
+    public $field_id = null;
+    public $value = null;
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
     {
-        return array(
-           'submission_id' => array(AttributeType::Number),
-           'field_id' => array(AttributeType::Number),
-           'value' => array(AttributeType::String)
-        );
+        return [
+            [['send_opt_in'], 'boolean'],
+        ];
     }
 }

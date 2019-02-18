@@ -14,8 +14,8 @@
 	name:         'send_opt_in',
 	on:			  settings.send_opt_in,
 	instructions: "Define if an opt-in-mail is sent to the user, that must be accepted via the opt-intoken contained in that email."|t,
-	disabled:     (craft.config.get('send_opt_in', 'optinmail') is not sameas(null)),
-	warning:      (craft.config.get('send_opt_in', 'optinmail') is not sameas(null)) ? configWarning('send_opt_in'),
+	disabled:     (craft.config.get('send_opt_in', 'optinmail') is not same as(null)),
+	warning:      (craft.config.get('send_opt_in', 'optinmail') is not same as(null)) ? configWarning('send_opt_in'),
 	errors:       settings.getErrors('send_opt_in')
 }) }}
 
@@ -25,8 +25,8 @@
 	name:         'opt_in_success_recepient',
 	instructions: "which email address are the accepted Opt-In-Emails sent to"|t,
 	value:        (settings.opt_in_success_recepient ? settings.opt_in_success_recepient : 'example@mail.com'),
-	disabled:     (craft.config.get('opt_in_success_recepient', 'optinmail') is not sameas(null)),
-	warning:      (craft.config.get('opt_in_success_recepient', 'optinmail') is not sameas(null)) ? configWarning('opt_in_success_recepient'),
+	disabled:     (craft.config.get('opt_in_success_recepient', 'optinmail') is not same as(null)),
+	warning:      (craft.config.get('opt_in_success_recepient', 'optinmail') is not same as(null)) ? configWarning('opt_in_success_recepient'),
 	errors:       settings.getErrors('opt_in_success_recepient')
 }) }}
 
@@ -36,8 +36,8 @@
 	name:         'subject_opt_in_mail',
 	instructions: "Here you can define the subject of the opt-in-mail"|t,
 	value:        (settings.subject_opt_in_mail ? settings.subject_opt_in_mail : 'subject'),
-	disabled:     (craft.config.get('subject_opt_in_mail', 'optinmail') is not sameas(null)),
-	warning:      (craft.config.get('subject_opt_in_mail', 'optinmail') is not sameas(null)) ? configWarning('subject_opt_in_mail'),
+	disabled:     (craft.config.get('subject_opt_in_mail', 'optinmail') is not same as(null)),
+	warning:      (craft.config.get('subject_opt_in_mail', 'optinmail') is not same as(null)) ? configWarning('subject_opt_in_mail'),
 	errors:       settings.getErrors('subject_opt_in_mail')
 }) }}
 
@@ -47,8 +47,8 @@
 	name:         'subject_success_mail',
 	instructions: "Here you can define the subject of the success-mail"|t,
 	value:        (settings.subject_success_mail ? settings.subject_success_mail : 'subject'),
-	disabled:     (craft.config.get('subject_success_mail', 'optinmail') is not sameas(null)),
-	warning:      (craft.config.get('subject_success_mail', 'optinmail') is not sameas(null)) ? configWarning('subject_success_mail'),
+	disabled:     (craft.config.get('subject_success_mail', 'optinmail') is not same as(null)),
+	warning:      (craft.config.get('subject_success_mail', 'optinmail') is not same as(null)) ? configWarning('subject_success_mail'),
 	errors:       settings.getErrors('subject_success_mail')
 }) }}
 
@@ -58,8 +58,8 @@
 	name:         'opt_in_mail_template_path',
 	instructions: "Path to the template file that you want to send to the user, when opt-in form is submitted"|t,
 	value:        (settings.opt_in_mail_template_path ? settings.opt_in_mail_template_path : 'path/to/template.twig'),
-	disabled:     (craft.config.get('opt_in_mail_template_path', 'optinmail') is not sameas(null)),
-	warning:      (craft.config.get('opt_in_mail_template_path', 'optinmail') is not sameas(null)) ? configWarning('opt_in_mail_template_path'),
+	disabled:     (craft.config.get('opt_in_mail_template_path', 'optinmail') is not same as(null)),
+	warning:      (craft.config.get('opt_in_mail_template_path', 'optinmail') is not same as(null)) ? configWarning('opt_in_mail_template_path'),
 	errors:       settings.getErrors('opt_in_mail_template_path')
 }) }}
 
@@ -69,8 +69,8 @@
 	name:         'success_page_template_path',
 	instructions: "Path to the template file that you want to render, when opt-in process was successfull or to show errors when opt-in process was not successful"|t,
 	value:        (settings.success_page_template_path ? settings.success_page_template_path : 'path/to/template.twig'),
-	disabled:     (craft.config.get('success_page_template_path', 'optinmail') is not sameas(null)),
-	warning:      (craft.config.get('success_page_template_path', 'optinmail') is not sameas(null)) ? configWarning('success_page_template_path'),
+	disabled:     (craft.config.get('success_page_template_path', 'optinmail') is not same as(null)),
+	warning:      (craft.config.get('success_page_template_path', 'optinmail') is not same as(null)) ? configWarning('success_page_template_path'),
 	errors:       settings.getErrors('success_page_template_path')
 }) }}
 
@@ -80,7 +80,7 @@
 	name:         'opt_in_confirmation_mail_template_path',
 	instructions: "Path to the template file that you want to render to the email sent to the user, when opt-in form is submitted"|t,
 	value:        (settings.opt_in_confirmation_mail_template_path ? settings.opt_in_confirmation_mail_template_path : 'path/to/template.twig'),
-	disabled:     (craft.config.get('opt_in_confirmation_mail_template_path', 'optinmail') is not sameas(null)),
-	warning:      (craft.config.get('opt_in_confirmation_mail_template_path', 'optinmail') is not sameas(null)) ? configWarning('opt_in_confirmation_mail_template_path'),
+	disabled:     (craft.config.get('opt_in_confirmation_mail_template_path', 'optinmail') is not same as(null)),
+	warning:      (craft.config.get('opt_in_confirmation_mail_template_path', 'optinmail') is not same as(null)) ? configWarning('opt_in_confirmation_mail_template_path'),
 	errors:       settings.getErrors('opt_in_confirmation_mail_template_path')
 }) }}

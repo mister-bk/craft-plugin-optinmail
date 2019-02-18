@@ -1,12 +1,31 @@
 <?php
-namespace misterbk\optInMail;
 
-class OptInMail_SubmissionFieldRecord extends BaseRecord
+namespace misterbk\optInMail\records;
+
+use craft\db\ActiveRecord;
+use yii\db\ActiveQuery;
+use misterbk\optInMail\models\OptInMail_SubmissionModel;
+use misterbk\optInMail\records\OptInMail_FieldRecord;
+use misterbk\optInMail\records\OptInMail_SubmissionRecord;
+
+class OptInMail_SubmissionFieldRecord extends ActiveRecord
 {
+    const TABLENAME = '{{%optinmail_submissionfields}}';
 
-    public function getTableName()
+    /**
+     * @return string
+     */
+    public static function tableName()
     {
-        return 'optinmail_submissionfields';
+        return self::TABLENAME;
+    }
+
+    public function getField() {
+        return $this->hasOne(OptInMail_FieldRecord::className(), ['id' => 'field']);
+    }
+
+    public function getSubmission() {
+        return $this->hasOne(OptInMail_SubmissionRecord::className(), ['id' => 'submission']);
     }
 
     protected function defineAttributes()

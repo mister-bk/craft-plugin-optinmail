@@ -1,13 +1,25 @@
 <?php
-namespace misterbk\optInMail;
 
-class OptInMail_SubmissionRecord extends BaseRecord
+namespace misterbk\optInMail\records;
+
+use craft\db\ActiveRecord;
+use misterbk\optInMail\models\OptInMail_SubmissionFieldModel;
+use yii\db\ActiveQuery;
+use misterbk\optInMail\models\OptInMail_SubmissionModel;
+use misterbk\optInMail\records\OptInMail_FieldRecord;
+
+class OptInMail_SubmissionRecord extends ActiveRecord
 {
+    const TABLENAME = '{{%optinmail_submissions}}';
 
-    public function getTableName()
+    /**
+     * @return string
+     */
+    public static function tableName()
     {
-        return 'optinmail_submissions';
+        return self::TABLENAME;
     }
+
 
     protected function defineAttributes()
     {
@@ -25,6 +37,16 @@ class OptInMail_SubmissionRecord extends BaseRecord
         );
     }
 
+    public function getFields()
+    {
+        return $this->hasMany(OptInMail_FieldRecord::className(), ['id' => 'field'])
+            ->viaTable('{{%optinmail_submissionfields}}', ['submission' => 'id']);
+    }
+
+    public function getSubmissionFields() {
+        return $this->hasMany(OptInMail_SubmissionFieldRecord::className(), ['submission' => 'id']);
+    }
+
     public function setSubmission(OptInMail_SubmissionModel $submissionModel)
     {
         $this->optInToken = uniqid() . uniqid();
@@ -34,8 +56,8 @@ class OptInMail_SubmissionRecord extends BaseRecord
         foreach ($submissionModel->fields as $field) {
             $tmp = new OptInMail_SubmissionFieldRecord();
             $tmp->value = $field->value;
-            $tmp->fieldId = $field->id;
-            $tmp->submissionId = $this->id;
+            $tmp->field = $field->id;
+            $tmp->submission = $this->id;
             $tmp->save();
         }
     }
@@ -43,8 +65,8 @@ class OptInMail_SubmissionRecord extends BaseRecord
     public function getValuesArray()
     {
         $result = array();
-        foreach ($this->submissionfields as $f) {
-            $result[$f->field->name] = $f->value;
+        foreach ($this->submissionFields as $f) {
+            $result[$f->getField()->one()->name] = $f->value;
         }
         return $result;
     }

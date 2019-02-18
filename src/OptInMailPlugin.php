@@ -8,55 +8,63 @@ use craft\web\View;
 use yii\base\Event;
 use misterbk\optInMail\models\Settings;
 use craft\events\RegisterTemplateRootsEvent;
+use craft\web\UrlManager;
 
 class OptInMailPlugin extends Plugin
 {
-	public $hasCpSettings = true;
+    public $hasCpSettings = true;
 
     /**
      * @inheritdoc
      */
     public function init()
     {
-		parent::init();
-		
-		Event::on(
-			View::class,
-			//View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS,
-			View::EVENT_REGISTER_CP_TEMPLATE_ROOTS,
-			function(RegisterTemplateRootsEvent $event) {
-				$event->roots['opt-in-mail'] = __DIR__ . '/templates';
-			}
-		);
-	}
-    
-	/**
-	 * @inheritdoc
-	 */
-	public function createSettingsModel()
-	{
-		return new Settings();
-	}
+        parent::init();
 
-	/**
-	 * @param array|BaseModel $values
-	 */
-	public function setSettings(array $values)
-	{
-		// Merge in any values that are stored in craft/config/optinmail.php
-		foreach ($this->getSettings() as $key => $value)
-		{
-			//$configValue = craft()->config->get($key, 'optinmail');
-			$configValue = Craft::$app->config->optinmail->$key;
+        Event::on(
+            View::class,
+            //View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS,
+            View::EVENT_REGISTER_CP_TEMPLATE_ROOTS,
+            function(RegisterTemplateRootsEvent $event) {
+                $event->roots['opt-in-mail'] = __DIR__ . '/templates';
+            }
+        );
+//        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) {
+//            $event->rules['cocktails/new'] = ['template' => 'cocktails/_edit'];
+//            $event->rules['cocktails/<widgetId:\d+>'] = 'cocktails/edit-cocktail';
+//        });
 
-			if ($configValue !== null)
-			{
-				$values[$key] = $configValue;
-			}
-		}
+        $this->setComponents([
+            'optInFormHandle' => \misterbk\optInMail\services\HandleFormService::class,
+        ]);
+    }
 
-		parent::setSettings($values);
-	}
+    /**
+     * @inheritdoc
+     */
+    public function createSettingsModel()
+    {
+        return new Settings();
+    }
+
+    /**
+     * @param array|BaseModel $values
+     */
+    public function setSettings(array $values)
+    {
+        // Merge in any values that are stored in craft/config/optinmail.php
+        foreach ($this->getSettings() as $key => $value)
+        {
+            $configValue = $this->getSettings()->$key;
+
+            if ($configValue !== null)
+            {
+                $values[$key] = $configValue;
+            }
+        }
+
+        parent::setSettings($values);
+    }
 
 //	/**
 //	 * @return array
@@ -74,10 +82,17 @@ class OptInMailPlugin extends Plugin
 //		);
 //	}
 
+    public function registerCpRoutes()
+    {
+        return array(
+            'opt-in-mail/form' => array('action' => 'opt-in-mail/form/'),
+        );
+    }
+
 
     protected function settingsHtml(): string
     {
-		//Craft::$app->getView()->setTemplateMode(View::TEMPLATE_MODE_CP);
+        //Craft::$app->getView()->setTemplateMode(View::TEMPLATE_MODE_CP);
         return Craft::$app->view->renderTemplate('opt-in-mail/settings', [
             'settings' => $this->getSettings()
         ]);

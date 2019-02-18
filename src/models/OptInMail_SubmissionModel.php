@@ -1,16 +1,13 @@
 <?php
-namespace misterbk\optInMail;
 
-class OptInMail_SubmissionModel extends BaseModel
+namespace misterbk\optInMail\models;
+
+use craft\base\Model;
+
+class OptInMail_SubmissionModel extends Model
 {
-
-    protected function defineAttributes()
-    {
-        return array(
-           'acceptDate' => AttributeType::DateTime,
-           'fields' => AttributeType::Mixed,
-           'optInToken' => AttributeType::String,
-           'recipient' => AttributeType::Email,
-        );
-    }
+    public $acceptDate = null;
+    public $fields = null;
+    public $optInToken = null;
+    public $recipient = null;
 }

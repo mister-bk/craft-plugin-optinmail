@@ -1,11 +1,4 @@
 <?php
-/**
- * Craft Mix
- *
- * @author    mister bk! GmbH
- * @copyright Copyright (c) 2017-2018 mister bk! GmbH
- * @link      https://www.mister-bk.de/
- */
 
 namespace misterbk\optInMail\models;
 
@@ -18,15 +11,15 @@ class Settings extends Model
      *
      * @var string
      */
-    public $send_opt_in = true;
 
-//    /**
-//     * Path to the asset directory.
-//     *
-//     * @var string
-//     */
-//    public $assetPath = 'assets';
-
+    public $send_opt_in = null;
+    public $opt_in_success_recepient = null;
+    public $subject_opt_in_mail = null;
+    public $subject_success_mail = null;
+    public $opt_in_mail_template_path = null;
+    public $success_page_template_path = null;
+    public $opt_in_confirmation_mail_template_path = null;
+    public $qualified_fieldnames = null;
 
     /**
      * @inheritdoc
@@ -34,8 +27,8 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['send_opt_in'], 'required'],
-            [['send_opt_in'], 'bool'],
+            [['send_opt_in'], 'boolean'],
         ];
     }
 }
+

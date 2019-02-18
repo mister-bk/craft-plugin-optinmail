@@ -1,12 +1,21 @@
 <?php
-namespace misterbk\optInMail;
+namespace misterbk\optInMail\records;
 
-class OptInMail_FieldRecord extends BaseRecord
+use craft\db\ActiveRecord;
+use yii\db\ActiveQuery;
+use misterbk\optInMail\models\OptInMail_FieldModel;
+
+class OptInMail_FieldRecord extends ActiveRecord
 {
 
-    public function getTableName()
+    const TABLENAME = '{{%optinmail_fields}}';
+
+    /**
+     * @return string
+     */
+    public static function tableName()
     {
-        return 'optinmail_fields';
+        return self::TABLENAME;
     }
 
     protected function defineAttributes()
@@ -34,6 +43,8 @@ class OptInMail_FieldRecord extends BaseRecord
     {
         $result = new OptInMail_FieldModel();
         $result->name = $this->name;
+        $result->formHandle = $this->formHandle;
+        $result->uid = $this->uid;
         $result->id = $this->id;
         return $result;
     }

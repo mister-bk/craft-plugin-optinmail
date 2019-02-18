@@ -1,22 +1,34 @@
 <?php
-namespace misterbk\optInMail;
+namespace misterbk\optInMail\services;
 
-class OptInMail_HandleFormService extends BaseApplicationComponent
+use yii\base\Component;
+//use misterbk\optInMail\models\OptInMail_SubmissionFieldModel;
+use misterbk\optInMail\models\OptInMail_SubmissionModel;
+use misterbk\optInMail\models\OptInMail_FieldModel;
+use misterbk\optInMail\records\OptInMail_SubmissionRecord;
+use misterbk\optInMail\records\OptInMail_FieldRecord;
+use misterbk\OptInMail\OptInMailPlugin as Plugin;
+use craft\db\Query;
+use craft\mail\Message;
+use craft\helpers\UrlHelper;
+use craft\web\View;
+
+class HandleFormService extends Component//BaseApplicationComponent
 {
     const FORM_HANDLE_FIELD_NAME = 'optInFormHandle';
 
 
     public function fieldExists(String $name, $formHandle)
     {
-        $query = craft()->db->createCommand()
+        $query = (new Query())
             ->select('id')
-            ->from('optinmail_fields')
+            ->from(['{{%optinmail_fields}}'])
             ->where(array(
                 'name' => $name,
                 'formHandle' => $formHandle))
-            ->order('id ASC')
+            ->orderBy('id ASC')
             ->limit(1)
-            ->queryAll();
+            ->all();
         return (count($query) !== 0);
     }
 
@@ -36,7 +48,8 @@ class OptInMail_HandleFormService extends BaseApplicationComponent
                 $field->value = trim($value);
                 $field->formHandle = $formHandle;
                 if ($field->validate()) {
-                    assert(in_array($key, Craft::$app->config->optinmail->qualified_fieldnames), 'unqualified name found in post: "' . $key . '"');
+                    assert(in_array($key, Plugin::getInstance()->settings->qualified_fieldnames), 'unqualified name found in post: "' . $key . '"');
+                    //assert(in_array($key, \Craft::$app->config->get('qualified_fieldnames', 'optinmail'), 'unqualified name found in post: "' . $key . '"'));
                     $db_entry = new OptInMail_FieldRecord();
                     $db_entry->setField($field);
                     $db_entry->save();
@@ -56,7 +69,7 @@ class OptInMail_HandleFormService extends BaseApplicationComponent
 
     private function getField(String $name)
     {
-        $tmp = OptInMail_FieldRecord::model()->findByAttributes(array('name' => $name));
+        $tmp = OptInMail_FieldRecord::findOne(array('name' => $name));
         $result = $tmp->getFieldModel();
         assert(!is_null($result), 'Requested field, not known to db. Please check Plugin Settings');
         return $result;
@@ -72,18 +85,19 @@ class OptInMail_HandleFormService extends BaseApplicationComponent
 
     public function handlePost(OptInMail_SubmissionModel $submission, array $post)
     {
-        $settings = craft()->plugins->getPlugin('optinmail')->getSettings();
+        $settings = Plugin::getInstance()->getSettings();
         $error_msg = null;
-        if ($settings->opt_in_mail_template_path === 'path/to/template.twig' ||
-            $settings->opt_in_confirmation_mail_template_path === 'path/to/template.twig' ||
-            $settings->success_page_template_path === 'path/to/template.twig')
+        if ($settings->opt_in_mail_template_path === 'path/to/template.twig' || $settings->opt_in_mail_template_path === null ||
+            $settings->opt_in_confirmation_mail_template_path === 'path/to/template.twig' || $settings->opt_in_confirmation_mail_template_path === null ||
+            $settings->success_page_template_path === 'path/to/template.twig' ||  $settings->success_page_template_path === null)
 		{
-			throw new Exception('Please make sure paths to all three template files are set correctly in plugin settings');
+			throw new \Exception('Please make sure paths to all three template files are set correctly in plugin settings');
 		}
         $submission->fields = $this->populateFields($post);
+
         if (!$submission->validate()) {
-            $error_msg = $submission->getErrors;
-            return;
+            $error_msg = $submission->getErrors();
+            return $error_msg;
         }
 
         try {
@@ -106,31 +120,34 @@ class OptInMail_HandleFormService extends BaseApplicationComponent
     {
         $result = new OptInMail_SubmissionRecord();
         $result->setSubmission($submission);
+        $result->dateCreated = new \DateTime();
         return $result;
     }
 
     private function sendOptInMail(OptInMail_SubmissionRecord $submission)
     {
-        $settings = craft()->plugins->getPlugin('optinmail')->getSettings();
-        $email = new EmailModel();
-        $email->toEmail = $submission->recipient;
-        $email->subject = $settings->subject_opt_in_mail;
-        $link = UrlHelper::getActionUrl('optInMail/form/acceptOptIn', array('optInToken' => $submission->optInToken));
-        $html = craft()->view->render($settings->opt_in_mail_template_path,
+        $settings = Plugin::getInstance()->getSettings();
+        $mailSettings = \Craft::$app->systemSettings->getSettings('email');
+        $email = new Message();
+        $email->setFrom([$mailSettings['fromEmail'] => $mailSettings['fromName']]);
+        $email->setTo($submission->recipient);
+        $email->setSubject($settings->subject_opt_in_mail);
+        $link = UrlHelper::url('actions/opt-in-mail/form/accept-opt-in', array('optInToken' => $submission->optInToken));
+        $html = \Craft::$app->view->renderTemplate($settings->opt_in_mail_template_path,
             [
             'optInData' => $submission->getValuesArray(),
             'optInLink' => $link
             ]
         );
-        $email->htmlBody = $html;
+        $email->setHtmlBody($html);
 
-        craft()->email->sendEmail($email);
+        \Craft::$app->mailer->send($email);
     }
 
     public function verifyToken(String $token) {
         $error_msg = null;
 
-        $submissionRecord = OptInMail_SubmissionRecord::model()->findByAttributes(array('optInToken' => $token));
+        $submissionRecord = OptInMail_SubmissionRecord::findOne(array('optInToken' => $token));
 
         if (null === $submissionRecord) {
             $error_msg = 'No submission found with the optInToken: "' . $token . '"';
@@ -143,10 +160,10 @@ class OptInMail_HandleFormService extends BaseApplicationComponent
         }
 
         if ($error_msg === null) {
-            $hourAgo = new DateTime('-1 hour');
-            if ($hourAgo < $submissionRecord->dateCreated) {
+            $hourAgo = new \DateTime('-1 hour');
+            if ($hourAgo < new \DateTime($submissionRecord->dateCreated)) {
                 $success = $this->sendAcceptMails($submissionRecord);
-                $submissionRecord->acceptDate = new DateTime();
+                $submissionRecord->acceptDate = new \DateTime();
                 $submissionRecord->save();
             } else {
                 $error_msg = 'The submission is to old to be accepted now.';
@@ -157,36 +174,38 @@ class OptInMail_HandleFormService extends BaseApplicationComponent
     }
 
     private function sendAcceptMails(OptInMail_SubmissionRecord $submission) {
-        $settings = craft()->plugins->getPlugin('optinmail')->getSettings();
-        $email4User = new EmailModel();
-        $email4User->toEmail = $submission->recipient;
-        $email4User->subject = $settings->subject_success_mail;
-        $html = craft()->view->render($settings->opt_in_confirmation_mail_template_path,
+        $settings = Plugin::getInstance()->getSettings();
+        $mailSettings = \Craft::$app->systemSettings->getSettings('email');
+        $email4User = new Message();
+        $email4User->setFrom([$mailSettings['fromEmail'] => $mailSettings['fromName']]);
+        $email4User->setTo($submission->recipient);
+        $email4User->setSubject($settings->subject_success_mail);
+        $html = \Craft::$app->view->renderTemplate($settings->opt_in_confirmation_mail_template_path,
             [
             'optInData' => $submission->getValuesArray(),
             ]
         );
-        $email4User->htmlBody = $html;
+        $email4User->setHtmlBody($html);
 
         $recipientList = explode(',', $settings->opt_in_success_recepient);
 
-        $email4Owner = new EmailModel();
-        $email4Owner->subject = $settings->subject_success_mail;
-        $html = craft()->view->render($settings->opt_in_confirmation_mail_template_path,
+        $email4Owner = new Message();
+        $email4Owner->setSubject($settings->subject_success_mail);
+        $html = \Craft::$app->view->renderTemplate($settings->opt_in_confirmation_mail_template_path,
             [
             'optInData' => $submission->getValuesArray(),
             ]
         );
-        $email4Owner->htmlBody = $html;
+        $email4Owner->setHtmlBody($html);
 
         $success = true;
         try {
-            craft()->email->sendEmail($email4User);
+            \Craft::$app->mailer->send($email4User);
 
             foreach ($recipientList as $recipient) {
                 if (!empty($recipient)) {
-                    $email4Owner->toEmail = $recipient;
-                    craft()->email->sendEmail($email4Owner);
+                    $email4Owner->setTo($recipient);
+                    \Craft::$app->mailer->send($email4Owner);
                 }
             }
         } catch (Exception $e) {
