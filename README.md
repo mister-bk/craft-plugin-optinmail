@@ -1,4 +1,4 @@
-# craft-plugin-optinmail
+# optinmail
 A plugin that simplifies the implementation of opt-in process for any input forms.
 
 This is a Plugin for developers, as you will need to provide your own template-files.
