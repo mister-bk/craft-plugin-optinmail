@@ -3,10 +3,6 @@ A plugin that simplifies the implementation of opt-in process for any input form
 
 This is a Plugin for developers, as you will need to provide your own template-files.
 
-## Getting Started
-
-TODO: These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
 ## Prerequisites
 
 This plugin requires Craft CMS 3.0.0-beta.20 or later
