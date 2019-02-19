@@ -21,7 +21,7 @@ cd /path/to/my-project.test
 
 ##### tell Composer to load the plugin
 ```
-composer require misterbk/craft-plugin-optinmail
+composer require misterbk/optinmail
 ```
 
 ##### tell Craft to install the plugin
