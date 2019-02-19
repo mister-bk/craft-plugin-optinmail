@@ -2,7 +2,6 @@
 
 namespace misterbk\optInMail;
 
-use Craft;
 use craft\base\Plugin;
 use craft\web\View;
 use yii\base\Event;
@@ -29,10 +28,6 @@ class OptInMailPlugin extends Plugin
                 $event->roots['opt-in-mail'] = __DIR__ . '/templates';
             }
         );
-//        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) {
-//            $event->rules['cocktails/new'] = ['template' => 'cocktails/_edit'];
-//            $event->rules['cocktails/<widgetId:\d+>'] = 'cocktails/edit-cocktail';
-//        });
 
         $this->setComponents([
             'optInFormHandle' => \misterbk\optInMail\services\HandleFormService::class,
@@ -66,22 +61,6 @@ class OptInMailPlugin extends Plugin
         parent::setSettings($values);
     }
 
-//	/**
-//	 * @return array
-//	 */
-//	protected function defineSettings()
-//	{
-//		return array(
-//			'send_opt_in' => array(AttributeType::Bool, 'default' => true, 'required' => true),
-//			'opt_in_mail_template_path' => array(AttributeType::String, 'default' => Craft::t('app', 'path/to/template.twig'), 'required' => true),
-//			'opt_in_success_recepient' => array(AttributeType::String, 'default' => Craft::t('app', 'example@mail.com'), 'required' => true),
-//			'subject_opt_in_mail' => array(AttributeType::String, 'default' => Craft::t('app', 'subject'), 'required' => true),
-//			'subject_success_mail' => array(AttributeType::String, 'default' => Craft::t('app', 'subject'), 'required' => true),
-//			'success_page_template_path' => array(AttributeType::String, 'default' => Craft::t('app', 'path/to/template.twig'), 'required' => true),
-//			'opt_in_confirmation_mail_template_path' => array(AttributeType::String, 'default' => Craft::t('app', 'path/to/template.twig'), 'required' => true),
-//		);
-//	}
-
     public function registerCpRoutes()
     {
         return array(
@@ -92,8 +71,7 @@ class OptInMailPlugin extends Plugin
 
     protected function settingsHtml(): string
     {
-        //Craft::$app->getView()->setTemplateMode(View::TEMPLATE_MODE_CP);
-        return Craft::$app->view->renderTemplate('opt-in-mail/settings', [
+        return \Craft::$app->view->renderTemplate('opt-in-mail/settings', [
             'settings' => $this->getSettings()
         ]);
     }

@@ -5,7 +5,7 @@ namespace misterbk\optInMail\models;
 use craft\base\Model;
 
 
-class OptInMail_SubmissionFieldModel extends Model
+class SubmissionFieldModel extends Model
 {
 
     public $submission_id = null;

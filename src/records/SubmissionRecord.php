@@ -3,12 +3,10 @@
 namespace misterbk\optInMail\records;
 
 use craft\db\ActiveRecord;
-use misterbk\optInMail\models\OptInMail_SubmissionFieldModel;
 use yii\db\ActiveQuery;
-use misterbk\optInMail\models\OptInMail_SubmissionModel;
-use misterbk\optInMail\records\OptInMail_FieldRecord;
+use misterbk\optInMail\models\SubmissionModel;
 
-class OptInMail_SubmissionRecord extends ActiveRecord
+class SubmissionRecord extends ActiveRecord
 {
     const TABLENAME = '{{%optinmail_submissions}}';
 
@@ -30,31 +28,31 @@ class OptInMail_SubmissionRecord extends ActiveRecord
         );
     }
 
-    public function defineRelations()
-    {
-        return array(
-            'submissionfields' => array(static::HAS_MANY, 'OptInMail_SubmissionFieldRecord', 'submissionId'),
-        );
-    }
+//    public function defineRelations()
+//    {
+//        return array(
+//            'submissionfields' => array(static::HAS_MANY, 'SubmissionFieldRecord', 'submissionId'),
+//        );
+//    }
 
     public function getFields()
     {
-        return $this->hasMany(OptInMail_FieldRecord::className(), ['id' => 'field'])
+        return $this->hasMany(FieldRecord::className(), ['id' => 'field'])
             ->viaTable('{{%optinmail_submissionfields}}', ['submission' => 'id']);
     }
 
     public function getSubmissionFields() {
-        return $this->hasMany(OptInMail_SubmissionFieldRecord::className(), ['submission' => 'id']);
+        return $this->hasMany(SubmissionFieldRecord::className(), ['submission' => 'id']);
     }
 
-    public function setSubmission(OptInMail_SubmissionModel $submissionModel)
+    public function setSubmission(SubmissionModel $submissionModel)
     {
         $this->optInToken = uniqid() . uniqid();
         $this->recipient = $submissionModel->recipient;
         $this->save();
 
         foreach ($submissionModel->fields as $field) {
-            $tmp = new OptInMail_SubmissionFieldRecord();
+            $tmp = new SubmissionFieldRecord();
             $tmp->value = $field->value;
             $tmp->field = $field->id;
             $tmp->submission = $this->id;

@@ -2,7 +2,6 @@
 
 namespace misterbk\optInMail\migrations;
 
-use Craft;
 use craft\db\Migration;
 
 /**
@@ -11,16 +10,11 @@ use craft\db\Migration;
 class Install extends Migration
 {
     /**
-     * @var string The database driver to use
-     */
-    public $driver;
-
-    /**
      * @inheritdoc
      */
     public function safeUp()
     {
-        $this->driver = Craft::$app->getConfig()->getDb()->driver;
+
         foreach ($this->getTableData() as $data) {
             $this->createTable($data['table'], $data['fields']);
         }

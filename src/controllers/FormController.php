@@ -3,8 +3,7 @@
 namespace misterbk\optInMail\controllers;
 
 use craft\web\Controller as Controller;
-use misterbk\optInMail\models\OptInMail_SubmissionModel;
-use Craft;
+use misterbk\optInMail\models\SubmissionModel;
 use misterbk\OptInMail\OptInMailPlugin as Plugin;
 
 class FormController extends Controller {
@@ -28,7 +27,7 @@ class FormController extends Controller {
             return;
         }
 
-        $submission = new OptInMail_SubmissionModel();
+        $submission = new SubmissionModel();
         $submission->acceptDate = null;
         $submission->optInToken = uniqid() . uniqid();
         $submission->recipient = $post['email'];

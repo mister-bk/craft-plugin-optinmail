@@ -4,7 +4,7 @@ namespace misterbk\optInMail\models;
 
 use craft\base\Model;
 
-class OptInMail_FieldModel extends Model
+class FieldModel extends Model
 {
 
     public $id = null;

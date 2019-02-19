@@ -2,11 +2,10 @@
 namespace misterbk\optInMail\services;
 
 use yii\base\Component;
-//use misterbk\optInMail\models\OptInMail_SubmissionFieldModel;
-use misterbk\optInMail\models\OptInMail_SubmissionModel;
-use misterbk\optInMail\models\OptInMail_FieldModel;
-use misterbk\optInMail\records\OptInMail_SubmissionRecord;
-use misterbk\optInMail\records\OptInMail_FieldRecord;
+use misterbk\optInMail\models\SubmissionModel;
+use misterbk\optInMail\models\FieldModel;
+use misterbk\optInMail\records\SubmissionRecord;
+use misterbk\optInMail\records\FieldRecord;
 use misterbk\OptInMail\OptInMailPlugin as Plugin;
 use craft\db\Query;
 use craft\mail\Message;
@@ -39,18 +38,22 @@ class HandleFormService extends Component//BaseApplicationComponent
         if (key_exists(self::FORM_HANDLE_FIELD_NAME, $postArray)) {
             $formHandle = $postArray[self::FORM_HANDLE_FIELD_NAME];
         }
+        if (!array_key_exists($formHandle, Plugin::getInstance()->settings->qualified_fieldnames)) {
+            throw new \Exception('unqualified formHandle "' . $formHandle . '" found in Post. Please edit opt-in-mail.php in config folder or add correct formHandle to the form');
+        }
 
         $result = array();
         foreach ($postArray as $key => $value) {
             if (!$this->fieldExists(trim($key), $formHandle)) {
-                $field = new OptInMail_FieldModel();
+                $field = new FieldModel();
                 $field->name = trim($key);
                 $field->value = trim($value);
                 $field->formHandle = $formHandle;
                 if ($field->validate()) {
-                    assert(in_array($key, Plugin::getInstance()->settings->qualified_fieldnames), 'unqualified name found in post: "' . $key . '"');
-                    //assert(in_array($key, \Craft::$app->config->get('qualified_fieldnames', 'optinmail'), 'unqualified name found in post: "' . $key . '"'));
-                    $db_entry = new OptInMail_FieldRecord();
+                    if ($key !== self::FORM_HANDLE_FIELD_NAME && !in_array($key, Plugin::getInstance()->settings->qualified_fieldnames[$formHandle])){
+                        throw new \Exception('unqualified field name "' . $key . '" found in post for formHandle "' . $formHandle . '"');
+                    }
+                    $db_entry = new FieldRecord();
                     $db_entry->setField($field);
                     $db_entry->save();
                     $field->id = $db_entry->id;
@@ -69,7 +72,7 @@ class HandleFormService extends Component//BaseApplicationComponent
 
     private function getField(String $name)
     {
-        $tmp = OptInMail_FieldRecord::findOne(array('name' => $name));
+        $tmp = FieldRecord::findOne(array('name' => $name));
         $result = $tmp->getFieldModel();
         assert(!is_null($result), 'Requested field, not known to db. Please check Plugin Settings');
         return $result;
@@ -77,13 +80,13 @@ class HandleFormService extends Component//BaseApplicationComponent
 
     private function getFieldModel(array $fieldArray)
     {
-        $result = new OptInMail_FieldModel();
+        $result = new FieldModel();
         $result->name = $fieldArray['name'];
         $result->id = $fieldArray['id'];
         return $result;
     }
 
-    public function handlePost(OptInMail_SubmissionModel $submission, array $post)
+    public function handlePost(SubmissionModel $submission, array $post)
     {
         $settings = Plugin::getInstance()->getSettings();
         $error_msg = null;
@@ -116,15 +119,15 @@ class HandleFormService extends Component//BaseApplicationComponent
         return $error_msg;
     }
 
-    private function saveSubmission(OptInMail_SubmissionModel $submission)
+    private function saveSubmission(SubmissionModel $submission)
     {
-        $result = new OptInMail_SubmissionRecord();
+        $result = new SubmissionRecord();
         $result->setSubmission($submission);
         $result->dateCreated = new \DateTime();
         return $result;
     }
 
-    private function sendOptInMail(OptInMail_SubmissionRecord $submission)
+    private function sendOptInMail(SubmissionRecord $submission)
     {
         $settings = Plugin::getInstance()->getSettings();
         $mailSettings = \Craft::$app->systemSettings->getSettings('email');
@@ -147,7 +150,7 @@ class HandleFormService extends Component//BaseApplicationComponent
     public function verifyToken(String $token) {
         $error_msg = null;
 
-        $submissionRecord = OptInMail_SubmissionRecord::findOne(array('optInToken' => $token));
+        $submissionRecord = SubmissionRecord::findOne(array('optInToken' => $token));
 
         if (null === $submissionRecord) {
             $error_msg = 'No submission found with the optInToken: "' . $token . '"';
@@ -173,7 +176,7 @@ class HandleFormService extends Component//BaseApplicationComponent
         return $error_msg;
     }
 
-    private function sendAcceptMails(OptInMail_SubmissionRecord $submission) {
+    private function sendAcceptMails(SubmissionRecord $submission) {
         $settings = Plugin::getInstance()->getSettings();
         $mailSettings = \Craft::$app->systemSettings->getSettings('email');
         $email4User = new Message();

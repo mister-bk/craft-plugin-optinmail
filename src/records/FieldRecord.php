@@ -3,9 +3,9 @@ namespace misterbk\optInMail\records;
 
 use craft\db\ActiveRecord;
 use yii\db\ActiveQuery;
-use misterbk\optInMail\models\OptInMail_FieldModel;
+use misterbk\optInMail\models\FieldModel;
 
-class OptInMail_FieldRecord extends ActiveRecord
+class FieldRecord extends ActiveRecord
 {
 
     const TABLENAME = '{{%optinmail_fields}}';
@@ -26,14 +26,14 @@ class OptInMail_FieldRecord extends ActiveRecord
         );
     }
 
-    public function defineRelations()
-    {
-        return array(
-            'submissionfields' => array(static::HAS_MANY, 'OptInMail_SubmissionFieldRecord', 'fieldId'),
-        );
-    }
+//    public function defineRelations()
+//    {
+//        return array(
+//            'submissionfields' => array(static::HAS_MANY, 'SubmissionFieldRecord', 'fieldId'),
+//        );
+//    }
 
-    public function setField(OptInMail_FieldModel $field)
+    public function setField(FieldModel $field)
     {
         $this->name = $field->name;
         $this->formHandle = $field->formHandle;
@@ -41,7 +41,7 @@ class OptInMail_FieldRecord extends ActiveRecord
 
     public function getFieldModel()
     {
-        $result = new OptInMail_FieldModel();
+        $result = new FieldModel();
         $result->name = $this->name;
         $result->formHandle = $this->formHandle;
         $result->uid = $this->uid;
