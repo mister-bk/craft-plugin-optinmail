@@ -1,5 +1,5 @@
 {
-    "name": "misterbk/craft-plugin-optinmail",
+    "name": "misterbk/optinmail",
     "description": "A plugin that simplifies the implementation of opt-in process for any input forms in Craft CMS.",
     "version": "1.0.0",
     "type": "craft-plugin",
