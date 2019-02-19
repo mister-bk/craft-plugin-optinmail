@@ -57,5 +57,5 @@ If Craft's mailing settings are set you can submit your form and see if you rece
 
 ## Additional Info
 This is one of our first Plug-ins for Craft 3, so we rely on your feedback.
-If you have any suggestions or found any bugs, please contact as over our Github-Account : https://github.com/mister-bk or via
+If you have any suggestions or found any bugs, please contact us over our Github-Account : https://github.com/mister-bk or via
 email: [mister-bk!](mailto:s.karst@mister-bk.de)
