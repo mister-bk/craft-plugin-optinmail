@@ -1,0 +1,13 @@
+{% block emailBody %}
+    <p>
+        Hello {{ optInData.firstname }} {{ optInData.lastname }},<br/><br/>
+
+        Thanks for submitting the formdata. <br>
+        To complete the opt-in process, click the link below.
+        <br/>
+        <br/>
+        <a href="{{ optInLink }}" target="_blank">click here to complete</a>
+        <br/>
+        <br/>
+    </p>
+{% endblock %}

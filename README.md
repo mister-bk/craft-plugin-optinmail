@@ -36,13 +36,13 @@ To get this plugin to work, you need to create or link your own template files.
 ##### 1. Settings
 To do this, please open the Controll-Center setup page in the admin section of Craft:\
 "Settings > Plug-ins > Opt In Mail"\
-Set the path to all three template files. An example is provided in the example-folder of this plugin.
+Set the path to all three template files. An example is provided in the examples-folder of this plugin.
 You can see how to access the variables provided in these views and see example implementations of the emails/sites   
 ##### 2. Qualified Field Names
 To prevent database-injection you have to provide "qualified field names", which means, that you whitelist the fields you
 want to accept in the form you want to connect with an opt-in-procedure.
 Just add the names of your input fields under the corresponding formHandle in the "opt-in-mail.php file". You find this file under: "config/opt-in-mail.php"\
-If that file does not exist, you can copy our example config file from "craft-plugin-optInMail/src/templates/opt-in-mail" to Craft's config folder and add your field names there.
+If that file does not exist, you can copy our example config file from "craft-plugin-optInMail/src/examples/opt-in-mail.php" to Craft's config folder and add your field names there.
 
 ##### 3. Hook up your form
 When everything is set up you can connect your form to the plugin by adding a hidden input field to your form with the following format:\

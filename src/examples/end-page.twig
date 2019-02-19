@@ -1,0 +1,11 @@
+{% extends['_sites/site'] %}
+
+{% block content %}
+
+    {% if success %}
+        {% set text = '<p>Hurray everything went fine<br>Now the confirmation email is on the way</p>' %}
+    {% else %}
+        {% set text = '<p>Something went wrong. The following information may help:  <br> ' ~ error_msg ~ '</p>' %}
+    {% endif %}
+    <h3>huhu {{ text }}</h3>
+{% endblock %}
