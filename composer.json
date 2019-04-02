@@ -2,7 +2,7 @@
     "name": "misterbk/optinmail",
     "description": "A plugin that simplifies the implementation of opt-in process for any input forms in Craft CMS.",
     "type": "craft-plugin",
-    "license": "MIT",
+    "license": "proprietary",
     "keywords": [
       "craft",
       "craft3",
