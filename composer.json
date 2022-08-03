@@ -2,7 +2,7 @@
     "name": "misterbk/optinmail",
     "description": "A plugin that simplifies the implementation of opt-in process for any input forms in Craft CMS.",
     "type": "craft-plugin",
-    "version": "1.0.5",
+    "version": "1.0.2",
     "license": "proprietary",
     "keywords": [
       "craft",
@@ -17,7 +17,7 @@
     "authors": [
       {
         "name": "mister bk! GmbH",
-        "email": "info@mister-bk.de",
+        "email": "dev@mister-bk.de",
         "homepage": "https://www.mister-bk.de/"
       }
     ],
