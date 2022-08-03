@@ -38,11 +38,11 @@ class SubmissionRecord extends ActiveRecord
     public function getFields()
     {
         return $this->hasMany(FieldRecord::className(), ['id' => 'field'])
-            ->viaTable('{{%optinmail_submissionfields}}', ['submission' => 'id']);
+            ->viaTable('{{%optinmail_submissionfields}}', ['submissionId' => 'id']);
     }
 
     public function getSubmissionFields() {
-        return $this->hasMany(SubmissionFieldRecord::className(), ['submission' => 'id']);
+        return $this->hasMany(SubmissionFieldRecord::className(), ['submissionId' => 'id']);
     }
 
     public function setSubmission(SubmissionModel $submissionModel)
@@ -50,12 +50,14 @@ class SubmissionRecord extends ActiveRecord
         $this->optInToken = uniqid() . uniqid();
         $this->recipient = $submissionModel->recipient;
         $this->save();
+        
+        
 
         foreach ($submissionModel->fields as $field) {
             $tmp = new SubmissionFieldRecord();
             $tmp->value = $field->value;
-            $tmp->field = $field->id;
-            $tmp->submission = $this->id;
+            $tmp->fieldId = $field->id;
+            $tmp->submissionId = $this->id;
             $tmp->save();
         }
     }
@@ -63,7 +65,7 @@ class SubmissionRecord extends ActiveRecord
     public function getValuesArray()
     {
         $result = array();
-        foreach ($this->submissionFields as $f) {
+        foreach ($this->getSubmissionFields()->all() as $f) {
             $result[$f->getField()->one()->name] = $f->value;
         }
         return $result;

@@ -1,6 +1,8 @@
 <?php
 namespace misterbk\optInMail\services;
 
+use Craft;
+use craft\base\Volume;
 use yii\base\Component;
 use misterbk\optInMail\models\SubmissionModel;
 use misterbk\optInMail\models\FieldModel;
@@ -8,9 +10,19 @@ use misterbk\optInMail\records\SubmissionRecord;
 use misterbk\optInMail\records\FieldRecord;
 use misterbk\OptInMail\OptInMailPlugin as Plugin;
 use craft\db\Query;
+use craft\db\Table;
+use craft\elements\Asset;
+use craft\elements\Entry;
 use craft\mail\Message;
 use craft\helpers\UrlHelper;
+use craft\records\Element;
+use craft\records\VolumeFolder;
+use craft\services\Assets;
+use craft\services\Relations;
+use craft\volumes\Local;
+use craft\web\AssetManager;
 use craft\web\View;
+use Exception;
 
 class HandleFormService extends Component//BaseApplicationComponent
 {
@@ -35,15 +47,14 @@ class HandleFormService extends Component//BaseApplicationComponent
     {
         assert(is_array($postArray));
         $formHandle = null;
+
         if (key_exists(self::FORM_HANDLE_FIELD_NAME, $postArray)) {
             $formHandle = $postArray[self::FORM_HANDLE_FIELD_NAME];
-        }
-        if (!array_key_exists($formHandle, Plugin::getInstance()->settings->qualified_fieldnames)) {
-            throw new \Exception('unqualified formHandle "' . $formHandle . '" found in Post. Please edit opt-in-mail.php in config folder or add correct formHandle to the form');
         }
 
         $result = array();
         foreach ($postArray as $key => $value) {
+            if($key === 'attachment') continue;
             if (!$this->fieldExists(trim($key), $formHandle)) {
                 $field = new FieldModel();
                 $field->name = trim($key);
@@ -96,6 +107,7 @@ class HandleFormService extends Component//BaseApplicationComponent
 		{
 			throw new \Exception('Please make sure paths to all three template files are set correctly in plugin settings');
 		}
+        
         $submission->fields = $this->populateFields($post);
 
         if (!$submission->validate()) {
@@ -111,7 +123,7 @@ class HandleFormService extends Component//BaseApplicationComponent
         if (!$settings->send_opt_in || $error_msg !== null) return $error_msg;
 
         try {
-            $this->sendOptInMail($submissionEntry);
+            $this->sendOptInMail($submissionEntry, $post);
         } catch (Exception $e) {
             $error_msg = $e->getMessage();
         }
@@ -127,24 +139,39 @@ class HandleFormService extends Component//BaseApplicationComponent
         return $result;
     }
 
-    private function sendOptInMail(SubmissionRecord $submission)
+    private function sendOptInMail(SubmissionRecord $submission, array $post)
     {
+        $email = new Message();
         $settings = Plugin::getInstance()->getSettings();
         $mailSettings = \Craft::$app->systemSettings->getSettings('email');
-        $email = new Message();
+        $optInData = $submission->getValuesArray();
+        try {
+            // Attachement
+            $attachment = Craft::$app->getElements()->getElementById($post['attachment'], Asset::class);
+            $filePath = Craft::$app->config->general->aliases["@webroot"] . '/media' . $attachment->folderPath . '/' . $attachment->filename;
+            
+
+            if (file_exists($filePath)) {
+                $email->attach($filePath);
+            }
+
+        } catch (\Exception $e) {
+            throw new Exception('something went wrong when attaching to email:' . PHP_EOL . '>>' . $e->getMessage() . '<<');
+        }
+
         $email->setFrom([$mailSettings['fromEmail'] => $mailSettings['fromName']]);
         $email->setTo($submission->recipient);
         $email->setSubject($settings->subject_opt_in_mail);
         $link = UrlHelper::url('actions/opt-in-mail/form/accept-opt-in', array('optInToken' => $submission->optInToken));
         $html = \Craft::$app->view->renderTemplate($settings->opt_in_mail_template_path,
             [
-            'optInData' => $submission->getValuesArray(),
-            'optInLink' => $link
+            'optInData' => $optInData,
+            'optInLink' => $link,
             ]
         );
         $email->setHtmlBody($html);
-
-        \Craft::$app->mailer->send($email);
+        
+        Craft::$app->mailer->send($email);
     }
 
     public function verifyToken(String $token) {

@@ -18,11 +18,11 @@ class SubmissionFieldRecord extends ActiveRecord
     }
 
     public function getField() {
-        return $this->hasOne(FieldRecord::className(), ['id' => 'field']);
+        return $this->hasOne(FieldRecord::className(), ['id' => 'fieldId']);
     }
 
     public function getSubmission() {
-        return $this->hasOne(SubmissionRecord::className(), ['id' => 'submission']);
+        return $this->hasOne(SubmissionRecord::className(), ['id' => 'submissionId']);
     }
 
     protected function defineAttributes()
