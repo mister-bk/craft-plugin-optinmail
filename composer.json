@@ -1,44 +1,43 @@
 {
-    "name": "misterbk/optinmail",
-    "description": "A plugin that simplifies the implementation of opt-in process for any input forms in Craft CMS.",
-    "type": "craft-plugin",
-    "version": "1.0.2",
-    "license": "proprietary",
-    "keywords": [
-      "craft",
-      "craft3",
-      "craftcms",
-      "craft-plugin",
-      "opt-in",
-      "double opt in",
-      "plugin",
-      "Mail"
-    ],
-    "authors": [
-      {
-        "name": "mister bk! GmbH",
-        "email": "dev@mister-bk.de",
-        "homepage": "https://www.mister-bk.de/"
-      }
-    ],
-    "require": {
-      "craftcms/cms": "^3.0.0"
-    },
-    "autoload": {
-      "psr-4": {
-        "misterbk\\optInMail\\": "src/"
-      }
-    },
-    "extra": {
-      "name": "Opt In Mail",
-      "handle": "opt-in-mail",
-      "schemaVersion": "1.0.0",
-      "developerEmail": "dev@mister-bk.de",
-      "documentationUrl": "https://github.com/mister-bk/craft-plugin-optinmail/blob/master/README.md",
-      "changelogUrl": "https://raw.githubusercontent.com/mister-bk/craft-plugin-optinmail/master/CHANGELOG.md",
-      "downloadUrl": "https://github.com/mister-bk/craft-plugin-optinmail/archive/master.zip",
-      "hasCpSettings": true,
-      "hasCpSection": false,
-      "class": "misterbk\\optInMail\\OptInMailPlugin"
-    }
-  }
+	"name": "misterbk/optinmail",
+	"description": "A plugin that simplifies the implementation of opt-in process for any input forms in Craft CMS.",
+	"type": "craft-plugin",
+	"version": "2.0.0",
+	"license": "proprietary",
+	"keywords": [
+		"craft",
+		"craftcms",
+		"craft-plugin",
+		"opt-in",
+		"double opt in",
+		"plugin",
+		"Mail"
+	],
+	"authors": [
+		{
+			"name": "mister bk! GmbH",
+			"email": "dev@mister-bk.de",
+			"homepage": "https://www.mister-bk.de/"
+		}
+	],
+	"require": {
+		"craftcms/cms": "^4.0.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"misterbk\\optInMail\\": "src/"
+		}
+	},
+	"extra": {
+		"name": "Opt In Mail",
+		"handle": "opt-in-mail",
+		"schemaVersion": "1.0.0",
+		"developerEmail": "dev@mister-bk.de",
+		"documentationUrl": "https://github.com/mister-bk/craft-plugin-optinmail/blob/master/README.md",
+		"changelogUrl": "https://raw.githubusercontent.com/mister-bk/craft-plugin-optinmail/master/CHANGELOG.md",
+		"downloadUrl": "https://github.com/mister-bk/craft-plugin-optinmail/archive/master.zip",
+		"hasCpSettings": true,
+		"hasCpSection": false,
+		"class": "misterbk\\optInMail\\OptInMailPlugin"
+	}
+}
