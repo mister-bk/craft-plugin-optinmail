@@ -41,7 +41,7 @@ class OptInMailPlugin extends Plugin
     {
         return new Settings();
     }
-   public function setSettings(array $values)
+   public function setSettings(array $values): void
     {
         // Merge in any values that are stored in craft/config/optinmail.php
         foreach ($this->getSettings() as $key => $value)
