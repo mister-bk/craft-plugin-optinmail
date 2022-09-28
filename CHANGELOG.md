@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.2 - 2022-09-28
+
+-   Fixed Craft 4 support
+
+## 2.0.1 - 2022-09-27
+
+-   Add types in plugin class
+
 ## 2.0.0 - 2022-09-26
 
 -   Fixed Craft 4 support
