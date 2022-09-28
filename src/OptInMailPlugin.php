@@ -1,7 +1,7 @@
 <?php
 
 namespace misterbk\optInMail;
-
+use craft\base\Model;
 use craft\base\Plugin;
 use craft\web\View;
 use yii\base\Event;
@@ -11,7 +11,7 @@ use craft\web\UrlManager;
 
 class OptInMailPlugin extends Plugin
 {
-    public $hasCpSettings = true;
+    public bool $hasCpSettings = true;
 
     /**
      * @inheritdoc
@@ -37,15 +37,11 @@ class OptInMailPlugin extends Plugin
     /**
      * @inheritdoc
      */
-    public function createSettingsModel()
+    public function createSettingsModel(): Model
     {
         return new Settings();
     }
-
-    /**
-     * @param array|BaseModel $values
-     */
-    public function setSettings(array $values)
+   public function setSettings(array $values): void
     {
         // Merge in any values that are stored in craft/config/optinmail.php
         foreach ($this->getSettings() as $key => $value)
@@ -61,7 +57,7 @@ class OptInMailPlugin extends Plugin
         parent::setSettings($values);
     }
 
-    public function registerCpRoutes()
+    public function registerCpRoutes(): array
     {
         return array(
             'opt-in-mail/form' => array('action' => 'opt-in-mail/form/'),

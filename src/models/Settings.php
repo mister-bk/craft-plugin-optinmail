@@ -24,7 +24,7 @@ class Settings extends Model
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['send_opt_in'], 'boolean'],
