@@ -8,7 +8,7 @@ use misterbk\OptInMail\OptInMailPlugin as Plugin;
 
 class FormController extends Controller {
 
-    protected bool $allowAnonymous = true;
+    protected array|bool|int $allowAnonymous = true;
     public $enableCsrfValidation = false;
 
     public function actionSaveFormData()
