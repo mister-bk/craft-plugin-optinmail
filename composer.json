@@ -2,7 +2,7 @@
 	"name": "misterbk/optinmail",
 	"description": "A plugin that simplifies the implementation of opt-in process for any input forms in Craft CMS.",
 	"type": "craft-plugin",
-	"version": "2.0.2",
+	"version": "2.0.3",
 	"license": "proprietary",
 	"keywords": [
 		"craft",
@@ -39,5 +39,11 @@
 		"hasCpSettings": true,
 		"hasCpSection": false,
 		"class": "misterbk\\optInMail\\OptInMailPlugin"
+	},
+	"config": {
+		"allow-plugins": {
+			"yiisoft/yii2-composer": true,
+			"craftcms/plugin-installer": true
+		}
 	}
 }

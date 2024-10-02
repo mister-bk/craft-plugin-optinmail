@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.3 - 2024-10-02
+
+-   Update dependencies
+
 ## 2.0.2 - 2022-09-28
 
 -   Fixed Craft 4 support
