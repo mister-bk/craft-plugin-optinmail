@@ -39,5 +39,11 @@
 		"hasCpSettings": true,
 		"hasCpSection": false,
 		"class": "misterbk\\optInMail\\OptInMailPlugin"
+	},
+	"config": {
+		"allow-plugins": {
+			"yiisoft/yii2-composer": true,
+			"craftcms/plugin-installer": true
+		}
 	}
 }
