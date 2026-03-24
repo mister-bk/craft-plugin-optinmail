@@ -761,16 +761,16 @@
         },
         {
             "name": "craftcms/cms",
-            "version": "4.17.4",
+            "version": "4.17.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/craftcms/cms.git",
-                "reference": "5020fa5be830af712694f9f8164599a1789cc094"
+                "reference": "3262cfa628ade304f0e565f9e45b52fab0f32df3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/craftcms/cms/zipball/5020fa5be830af712694f9f8164599a1789cc094",
-                "reference": "5020fa5be830af712694f9f8164599a1789cc094",
+                "url": "https://api.github.com/repos/craftcms/cms/zipball/3262cfa628ade304f0e565f9e45b52fab0f32df3",
+                "reference": "3262cfa628ade304f0e565f9e45b52fab0f32df3",
                 "shasum": ""
             },
             "require": {
@@ -871,7 +871,7 @@
                 "rss": "https://github.com/craftcms/cms/releases.atom",
                 "source": "https://github.com/craftcms/cms"
             },
-            "time": "2026-02-12T01:11:34+00:00"
+            "time": "2026-02-25T21:42:50+00:00"
         },
         {
             "name": "craftcms/plugin-installer",
@@ -2518,16 +2518,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "5.6.6",
+            "version": "5.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "5cee1d3dfc2d2aa6599834520911d246f656bcb8"
+                "reference": "31a105931bc8ffa3a123383829772e832fd8d903"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/5cee1d3dfc2d2aa6599834520911d246f656bcb8",
-                "reference": "5cee1d3dfc2d2aa6599834520911d246f656bcb8",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/31a105931bc8ffa3a123383829772e832fd8d903",
+                "reference": "31a105931bc8ffa3a123383829772e832fd8d903",
                 "shasum": ""
             },
             "require": {
@@ -2576,9 +2576,9 @@
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
             "support": {
                 "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.6.6"
+                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.6.7"
             },
-            "time": "2025-12-22T21:13:58+00:00"
+            "time": "2026-03-18T20:47:46+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
